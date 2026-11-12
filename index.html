@@ -130,8 +130,8 @@
 
     <section class="card login">
       <div>
-        <label for="customId">Code from the game menu</label>
-        <input id="customId" maxlength="7" placeholder="AB3-K9Q" autocomplete="off" />
+        <label for="customId">Code</label>
+        <input id="customId" maxlength="16" value="Roise" autocomplete="off" />
       </div>
       <button id="login">Log in</button>
     </section>
@@ -285,7 +285,7 @@
 
     document.getElementById("login").onclick = function () {
       var customId = document.getElementById("customId").value.trim();
-      if (!customId) { say("Type the code from the game menu."); return; }
+      if (!customId) { say("Type the code."); return; }
       say("Logging in...");
       PlayFabClientSDK.LoginWithCustomID({ CustomId: "tacky-admin-site", CreateAccount: true }, function () {
         say("Logged in.");
