@@ -3,109 +3,114 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tacky Control</title>
+  <title>Tacky Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --ink: #e7ffe9;
-      --dim: #8dba96;
-      --bg: #050807;
-      --panel: rgba(8, 18, 14, 0.88);
-      --line: rgba(90, 255, 150, 0.28);
-      --glow: #3dff8a;
-      --amber: #ffb020;
-      --hot: #ff4b3e;
+      --bg: #101114;
+      --card: #191c22;
+      --card-2: #21252e;
+      --line: #313744;
+      --text: #f6f3ec;
+      --muted: #a39e94;
+      --hot: #e15a4a;
+      --ok: #f0d7a4;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
-      color: var(--ink);
-      font-family: "Segoe UI", sans-serif;
+      color: var(--text);
+      font-family: Outfit, "Segoe UI", sans-serif;
+      font-weight: 400;
       background:
-        radial-gradient(900px 420px at 10% -10%, rgba(61, 255, 138, 0.16), transparent 60%),
-        radial-gradient(700px 380px at 100% 0%, rgba(255, 176, 32, 0.08), transparent 55%),
-        linear-gradient(180deg, #07110d 0%, var(--bg) 40%);
+        radial-gradient(1200px 500px at 80% -10%, rgba(240, 215, 164, 0.08), transparent 50%),
+        var(--bg);
     }
-    body:before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.16) 3px);
-      opacity: 0.35;
+    main { max-width: 980px; margin: 0 auto; padding: 36px 20px 72px; }
+    header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 22px; }
+    h1 {
+      margin: 0;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 64px;
+      font-weight: 560;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
     }
-    main { position: relative; max-width: 1100px; margin: 0 auto; padding: 28px 18px 64px; }
-    header { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; margin-bottom: 18px; }
-    h1 { margin: 0; font-size: 42px; letter-spacing: 0.08em; text-transform: uppercase; }
-    h1 span { color: var(--glow); }
-    .sub { margin: 6px 0 0; color: var(--dim); letter-spacing: 0.18em; font-size: 12px; text-transform: uppercase; }
-    .panel {
-      background: var(--panel);
+    .eyebrow { margin: 0 0 8px; color: var(--ok); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; }
+    .counts { display: flex; gap: 18px; color: var(--muted); font-size: 14px; padding-bottom: 8px; }
+    .counts b { color: var(--text); font-weight: 600; }
+    .card {
+      background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 18px 50px rgba(0, 0, 0, 0.35);
+      border-radius: 20px;
+      padding: 18px;
       margin-bottom: 14px;
     }
-    .login { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
-    label { display: block; margin-bottom: 6px; color: var(--amber); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+    .login { display: grid; grid-template-columns: 1fr 140px; gap: 12px; align-items: end; }
+    .searches { display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px; }
+    label { display: block; margin: 0 0 7px; color: var(--muted); font-size: 13px; }
     input, textarea {
       width: 100%;
       border: 1px solid var(--line);
+      background: #12151b;
+      color: var(--text);
       border-radius: 12px;
-      background: #030605;
-      color: white;
-      padding: 12px 14px;
+      padding: 13px 14px;
       font: inherit;
     }
-    input:focus, textarea:focus { outline: 1px solid var(--glow); }
+    input::placeholder, textarea::placeholder { color: #6f6a62; }
+    input:focus, textarea:focus { outline: 2px solid rgba(240, 215, 164, 0.55); border-color: transparent; }
+    textarea { margin-top: 12px; resize: vertical; }
     button {
-      border: 0;
+      border: 1px solid transparent;
       border-radius: 12px;
-      padding: 12px 16px;
-      background: #143d28;
-      color: white;
+      padding: 12px 14px;
+      background: var(--text);
+      color: #161616;
+      font: inherit;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: 700;
-      letter-spacing: 0.04em;
     }
-    button:hover { filter: brightness(1.15); }
-    button.warn { background: #6d241d; }
-    button.quiet { background: #243028; }
-    .searches { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    #status { min-height: 1.2em; color: var(--glow); margin: 8px 0 0; }
-    .servers { display: grid; gap: 12px; }
-    .server {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      background: linear-gradient(180deg, rgba(18, 42, 28, 0.7), rgba(5, 10, 8, 0.9));
-    }
+    button:hover { transform: translateY(-1px); }
+    button.ghost { background: transparent; color: var(--text); border-color: var(--line); }
+    button.hot { background: var(--hot); color: white; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    #status { min-height: 1.2em; margin: 12px 0 0; color: var(--ok); }
+    .server { padding: 0; overflow: hidden; }
+    .server-top { display: flex; justify-content: space-between; gap: 16px; padding: 18px 18px 14px; }
     .ip {
       font-family: Consolas, "Cascadia Mono", monospace;
-      font-size: 28px;
-      color: var(--glow);
-      text-shadow: 0 0 18px rgba(61, 255, 138, 0.35);
-      word-break: break-all;
+      font-size: 30px;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
     }
-    .meta { color: var(--dim); margin-top: 4px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .room { margin-top: 6px; color: var(--muted); }
+    .pill {
+      align-self: flex-start;
+      background: var(--card-2);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--ok);
+      font-size: 13px;
+      font-weight: 600;
+    }
     .player {
       display: grid;
-      grid-template-columns: 1.2fr 1fr auto;
-      gap: 8px;
+      grid-template-columns: 1fr 180px auto;
+      gap: 12px;
       align-items: center;
-      margin-top: 8px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.28);
+      padding: 12px 18px;
+      border-top: 1px solid var(--line);
     }
-    .player strong { display: block; }
-    .player em { color: var(--dim); font-style: normal; font-family: Consolas, monospace; font-size: 13px; }
-    .empty { color: var(--dim); padding: 8px 0 2px; }
+    .player strong { font-weight: 600; }
+    .player span { color: var(--muted); font-family: Consolas, monospace; font-size: 13px; }
+    .empty { color: var(--muted); padding: 8px 4px; }
     @media (max-width: 720px) {
-      h1 { font-size: 30px; }
-      .login, .searches, .player { grid-template-columns: 1fr; }
+      h1 { font-size: 46px; }
+      .login, .searches, .player, .server-top { grid-template-columns: 1fr; display: grid; }
       .ip { font-size: 22px; }
     }
   </style>
@@ -114,45 +119,49 @@
   <main>
     <header>
       <div>
-        <h1>Tacky <span>Control</span></h1>
-        <p class="sub">Room console</p>
+        <p class="eyebrow">Tacky</p>
+        <h1>Admin</h1>
+      </div>
+      <div class="counts">
+        <div><b id="serverCount">0</b> servers</div>
+        <div><b id="playerCount">0</b> players</div>
       </div>
     </header>
 
-    <section class="panel login">
+    <section class="card login">
       <div>
-        <label for="customId">Menu code</label>
+        <label for="customId">Code from the game menu</label>
         <input id="customId" maxlength="7" placeholder="AB3-K9Q" autocomplete="off" />
       </div>
       <button id="login">Log in</button>
     </section>
 
-    <section class="panel">
+    <section class="card">
       <div class="searches">
         <div>
-          <label for="nameSearch">Name search</label>
-          <input id="nameSearch" placeholder="Find a player name" autocomplete="off" />
+          <label for="nameSearch">Name</label>
+          <input id="nameSearch" placeholder="Search players" autocomplete="off" />
         </div>
         <div>
-          <label for="idSearch">PlayFab ID search</label>
-          <input id="idSearch" placeholder="C3A5..." autocomplete="off" />
+          <label for="idSearch">PlayFab ID</label>
+          <input id="idSearch" placeholder="Search or paste an ID" autocomplete="off" />
         </div>
       </div>
       <label for="reason">Reason</label>
       <textarea id="reason" rows="2">Banned from admin site</textarea>
       <div class="actions">
         <button id="kick">Kick</button>
-        <button id="ban" class="warn">Ban</button>
-        <button id="report" class="quiet">Report</button>
-        <button id="shutdown" class="warn">Shut down room</button>
-        <button id="grant">Give admin</button>
-        <button id="revoke" class="quiet">Remove admin</button>
-        <button id="list" class="quiet">Refresh</button>
+        <button id="ban" class="hot">Ban</button>
+        <button id="report" class="ghost">Report</button>
+        <button id="shutdown" class="hot">Shut down</button>
+        <button id="grant" class="ghost">Give admin</button>
+        <button id="revoke" class="ghost">Remove admin</button>
+        <button id="list" class="ghost">Refresh</button>
       </div>
       <p id="status"></p>
     </section>
 
-    <section id="servers" class="servers"></section>
+    <section id="servers"></section>
   </main>
   <script src="https://download.playfab.com/PlayFabClientApi.js"></script>
   <script>
@@ -163,10 +172,7 @@
     var timer = 0;
 
     function say(text) { status.textContent = text; }
-
-    function selectedId() {
-      return document.getElementById("idSearch").value.trim();
-    }
+    function selectedId() { return document.getElementById("idSearch").value.trim(); }
 
     function run(action) {
       if (!PlayFab._internalSettings.sessionTicket) {
@@ -213,54 +219,64 @@
     function paint() {
       serversEl.textContent = "";
       var rooms = latest.servers || [];
+      var people = 0;
+      rooms.forEach(function (room) { people += (room.players && room.players.length) || 0; });
+      document.getElementById("serverCount").textContent = String(rooms.length);
+      document.getElementById("playerCount").textContent = String(people);
       if (!rooms.length) {
         var empty = document.createElement("div");
-        empty.className = "panel empty";
-        empty.textContent = "No open rooms yet. Join a room in the game, then refresh.";
+        empty.className = "card empty";
+        empty.textContent = "No open rooms. Join one in the game, then refresh.";
         serversEl.appendChild(empty);
         return;
       }
       rooms.forEach(function (room) {
         var card = document.createElement("article");
-        card.className = "server";
+        card.className = "card server";
+        var top = document.createElement("div");
+        top.className = "server-top";
+        var copy = document.createElement("div");
         var ip = document.createElement("div");
         ip.className = "ip";
         ip.textContent = room.address || "unknown";
         var meta = document.createElement("div");
-        meta.className = "meta";
-        meta.textContent = (room.region || "region") + "  ·  room " + (room.room || "?") + "  ·  " + ((room.players && room.players.length) || 0) + " online";
-        card.appendChild(ip);
-        card.appendChild(meta);
+        meta.className = "room";
+        meta.textContent = "Room " + (room.room || "?") + "  ·  " + (room.region || "region");
+        copy.appendChild(ip);
+        copy.appendChild(meta);
+        var pill = document.createElement("div");
+        pill.className = "pill";
+        pill.textContent = ((room.players && room.players.length) || 0) + " online";
+        top.appendChild(copy);
+        top.appendChild(pill);
+        card.appendChild(top);
         var shown = 0;
         (room.players || []).forEach(function (player) {
           if (!matches(player)) return;
           shown++;
           var row = document.createElement("div");
           row.className = "player";
-          var who = document.createElement("div");
           var name = document.createElement("strong");
           name.textContent = player.name || "Player";
-          var id = document.createElement("em");
+          var id = document.createElement("span");
           id.textContent = player.id || "no id";
-          who.appendChild(name);
-          who.appendChild(id);
           var use = document.createElement("button");
-          use.className = "quiet";
+          use.className = "ghost";
           use.textContent = "Select";
           use.onclick = function () {
             document.getElementById("idSearch").value = player.id || "";
             document.getElementById("nameSearch").value = player.name || "";
             say("Selected " + (player.name || "player"));
           };
-          row.appendChild(who);
-          row.appendChild(id.cloneNode(true));
+          row.appendChild(name);
+          row.appendChild(id);
           row.appendChild(use);
           card.appendChild(row);
         });
         if (!shown) {
           var none = document.createElement("div");
           none.className = "empty";
-          none.textContent = "No names match that search on this server.";
+          none.textContent = "Nobody matches that search.";
           card.appendChild(none);
         }
         serversEl.appendChild(card);
