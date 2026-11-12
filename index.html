@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Room admin</title>
+  <style>
+    body { margin: 0; font-family: Georgia, serif; background: #121417; color: #e8ece8; }
+    main { max-width: 640px; margin: 32px auto; padding: 0 16px 48px; }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    p { color: #b7c0b8; line-height: 1.4; }
+    label { display: block; margin: 14px 0 6px; }
+    input, textarea { width: 100%; box-sizing: border-box; padding: 10px; border: 0; border-radius: 8px; background: #22272c; color: white; }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    button { border: 0; border-radius: 8px; padding: 10px 14px; background: #2f6d45; color: white; cursor: pointer; }
+    button.warn { background: #8a3b32; }
+    button.quiet { background: #3a4250; }
+    #status { margin-top: 16px; min-height: 1.2em; }
+    pre { white-space: pre-wrap; background: #1b2026; padding: 12px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Room admin</h1>
+    <p>Type the short code from the top of the game menu.</p>
+    <label for="customId">Code</label>
+    <input id="customId" maxlength="7" placeholder="AB3-K9Q" autocomplete="off" />
+    <button id="login" class="quiet">Log in</button>
+    <label for="target">Target PlayFab ID</label>
+    <input id="target" autocomplete="off" />
+    <label for="reason">Reason</label>
+    <textarea id="reason" rows="3">Banned from admin site</textarea>
+    <div class="row">
+      <button id="kick">Kick</button>
+      <button id="ban" class="warn">Ban</button>
+      <button id="report" class="quiet">Report</button>
+      <button id="shutdown" class="warn">Shut down room</button>
+      <button id="grant">Give admin</button>
+      <button id="revoke" class="quiet">Remove admin</button>
+      <button id="list" class="quiet">Refresh list</button>
+    </div>
+    <p id="status"></p>
+    <pre id="output"></pre>
+  </main>
+  <script src="https://download.playfab.com/PlayFabClientApi.js"></script>
+  <script>
+    PlayFab.settings.titleId = "1422FE";
+    var status = document.getElementById("status");
+    var output = document.getElementById("output");
+
+    function say(text) { status.textContent = text; }
+    function show(data) { output.textContent = JSON.stringify(data, null, 2); }
+
+    function run(action) {
+      if (!PlayFab._internalSettings.sessionTicket) {
+        say("Log in first.");
+        return;
+      }
+      say("Sending " + action + "...");
+      PlayFabClientSDK.ExecuteCloudScript({
+        FunctionName: "AdminAction",
+        FunctionParameter: {
+          Action: action,
+          PlayFabId: document.getElementById("target").value.trim(),
+          Reason: document.getElementById("reason").value.trim(),
+          Code: document.getElementById("customId").value.trim(),
+          DurationInHours: 8760
+        },
+        GeneratePlayStreamEvent: true
+      }, function (result) {
+        var body = result && result.data && result.data.FunctionResult;
+        if (result && result.data && result.data.Error) {
+          say(result.data.Error.Message || "CloudScript error");
+        } else if (body && body.success === false) {
+          say(body.message || "Denied");
+        } else {
+          say(action + " sent. The open room picks it up within a few seconds.");
+        }
+        show(body || result);
+      }, function (error) {
+        say((error && error.errorMessage) || "Request failed");
+        show(error);
+      });
+    }
+
+    document.getElementById("login").onclick = function () {
+      var customId = document.getElementById("customId").value.trim();
+      if (!customId) { say("Type the code from the game menu."); return; }
+      say("Logging in...");
+      PlayFabClientSDK.LoginWithCustomID({ CustomId: "tacky-admin-site", CreateAccount: true }, function () {
+        say("Logged in.");
+        run("list");
+      }, function (error) {
+        say((error && error.errorMessage) || "Login failed.");
+        show(error);
+      });
+    };
+
+    ["kick", "ban", "report", "shutdown", "grant", "revoke", "list"].forEach(function (name) {
+      document.getElementById(name).onclick = function () { run(name); };
+    });
+  </script>
+</body>
+</html>
